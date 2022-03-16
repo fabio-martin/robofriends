@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import CardList from '../components/CardList';
 import SearchBox from '../components/SearchBox';
 import Scroll from '../components/Scroll';
 import ErrorBoundry from '../components/ErrorBoundry';
 import './App.css';
 
-const App = () => {
+import { setSearchField } from '../actions';
+
+const App = ({ store }) => {
   const [robots, setRobots] = useState([]);
-  const [searchfield, setSearchfield] = useState('');
+  // const [searchfield, setSearchfield] = useState('');
+  const searchField = useSelector((state) => state.searchField);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -16,10 +22,10 @@ const App = () => {
   }, []);
 
   const onSearchChange = (event) => {
-    setSearchfield(event.target.value);
+    dispatch(setSearchField(event.target.value));
   };
 
-  const filteredRobots = robots.filter((robot) => robot.name.toLowerCase().includes(searchfield.toLowerCase()));
+  const filteredRobots = robots.filter((robot) => robot.name.toLowerCase().includes(searchField.toLowerCase()));
 
   return !robots.length ? (
     <h1 className="f1">Loading</h1>
